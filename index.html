@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Chatbot App</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #87CEEB; /* skyblue */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        #chatLog {
+            width: 90%;
+            max-width: 600px;
+            border: 1px solid #000;
+            padding: 10px;
+            background-color: white;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+        #userBox {
+            width: 90%;
+            padding: 10px;
+            margin-top: 10px;
+            font-size: 18px;
+        }
+        table {
+            width: 100%;
+            margin-top: 10px;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+    <script>
+        const know = {
+            "hello": "Hi there",
+            "who are you?": "I am Neonbot",
+            "how are you?": "I am fine",
+            "bye": "Have a nice day!",
+            "7a": [
+                ["Name", "Room"],
+                ["Ms. Jaskirat Sekhon", "F9 (CO.C.T.-11A1)"],
+                ["Ms. Geetu Sharma", "F27 (C.T.11C2)"],
+                ["Mr. Vinay", "S9 (CO.C.T.-9D)"],
+                ["Ms. Neelu Duggal", "G3 (C.T.-11B)"],
+                ["Dr. Savita Nanda", "Staff Room (CO.C.T.-11B)"],
+                ["Ms. Sonika", "F13 (CO.C.T.-10B)"],
+                ["Ms. Gurdev Singh", "G11 (Physics Lab)"],
+                ["Vikram, Rakesh, Amit", "On Rounds"],
+                ["Ms. Harpuneet", "T27 (CO.C.T.-UE Aravalli)"],
+                ["Ms. Bhawna Bhatia", "F24 (CO.CT.12A)"],
+                ["Ms. Sonia Nawab", "F9 (CO.C.T.-8D)"],
+                ["Ms. Tamanna Uppal", "F3 (C.T.12C)"],
+                ["Ms. Manjot Kaur", "Not available"],
+                ["Ms. Amanbir", "T28 (Counselor's Room)"],
+                ["Ms. Meenakshi Sharma", "G4 (C.T.-12B)"],
+                ["Dr. Shaveta Singh", "S4 (C.T. - 10B)"],
+                ["Ms. Tejinder Sarao", "F12 (C.T.11C1)"],
+                ["Ms. Poorva Batra", "T6 (Bio – Lab)"],
+                ["Ms. Monika Bajaj", "Computer Lab (CO.C.T.UE Appalachien)"],
+                ["Ms. Jasjeet Kaur", "Computer Lab (CO.CT.10C)"]
+            ],
+            "7b": [
+                ["S.NO", "Subject Name", "Subject Teacher", "Room Number"],
+                ["1", "English", "Ms. Jaspal Mann", "T1 (C.T. – 8A)"],
+                ["2", "Math", "Ms. Gunchandeep Kaur", "S9 (CO.C.T.-7B)"],
+                ["3", "Physics, Chemistry", "Ms. Harshini Madan", "T27 (CO.C.T.-8C)"],
+                ["4", "Hindi", "Ms. Savita Sood", "S9 (CO.C.T.-8B)"],
+                ["", "", "Ms. Mridula Sharma", "T17(CO.C.T-UE-Shivalik)"],
+                ["5", "French", "Ms. Vanita Mahajan", "T12 (CO.-UE Alps)"],
+                ["6", "Punjabi", "Ms. Neetu Sharma", "S9 (CO.C.T.-7D)"],
+                ["", "", "Ms. Shobha", "T27 (CO.C.T.-UE Aravalli)"],
+                ["7", "History", "Ms. Monika Sharad", "T7 (C.T.-7A)"],
+                ["8", "Geography", "Ms. Charu Jaiswal", "T2 / Staff Room / S7"],
+                ["9", "German", "Ms. Vrinda Sharma", "Computer Lab"],
+                ["10", "Computers", "Ms. Preeti Sharma", "Computer Lab (CO.C.T.10A)"],
+                ["11", "Biology", "Ms. Deepika Ghai", "T8 (C.T.-7B)"],
+                ["12", "Counselor", "Ms. Manjot Kaur", "T28-Counseling Room"]
+            ],
+           "7c": [
+              ["S.NO", "Subject Name", "Subject Teacher", "Room Number"],
+              ["1", "English", "Ms. Manpreet Monga", "T10 (C.T. – 7C)"],
+              ["2", "Mathematics", "Ms. Parminder", "S7(IG) (C.T. – 9IG)"],
+              ["3", "Science", "Ms. Harshini, Ms. Deepika", "T27 (CO.C.T.-8C), T8 (C.T.-7B)"],
+              ["4", "Geography", "Ms. Simran Kang", "T2 (C.T. – 8B)"],
+              ["5", "History", "Ms. Monica Sharad", "T7 (C.T.-7A)"],
+              ["6", "Hindi", "Ms. Mridula, Ms. Nitu", "S9 (CO.C.T.-7D), T27 (CO.C.T.-UE Aravalli)"],
+              ["7", "Punjabi", "Ms. Shobha", "T27 (CO.C.T.-UE Aravalli)"],
+              ["8", "German", "Ms. Vrinda", "Computer Lab"],
+              ["9", "French", "Ms. Vanita", "T12 (CO.-UE Alps)"],
+              ["10", "Computer", "Ms. Jasjeet", "Computer Lab (CO.C.T.10C)"]
+           ],
+           "7d": [
+        ["S.NO", "Subject Name", "Subject Teacher", "Room Number"],
+        ["1", "English", "Ms. Manpreet Monga", "T10 (C.T. - 7C)"],
+        ["2", "Maths", "Ms. Parminder Arora", "S7 (9IG Room)"],
+        ["3", "Science", "Ms. Nikita Narula, Ms. Suvrita Sharma", "T11 (C.T. - 7D), F8 (C.T. - 9D)"],
+        ["4", "History", "Ms. Shaveta Agnihotri", "S5 (C.T. - 10C)"],
+        ["5", "Geography", "Ms. Simran Kang", "T2 (C.T. - 8B)"],
+        ["6", "Hindi", "Ms. Savita, Ms. Mridula", "S9 (CO.C.T.-8B), T17 (CO. C.T.-UE-Shivalik)"],
+        ["7", "Punjabi", "Ms. Nitu, Ms. Shobha", "S9 (CO.C.T.-7D), T27 (CO.C.T.-UE Aravalli)"],
+        ["8", "Computer", "Ms. Jasjeet", "Computer Lab"],
+        ["9", "French", "Ms. Amrit Kaur", "T12 (French Room)"],
+        ["10", "German", "Ms. Vrinda Sharma", "Computer Lab"],
+        ["11", "PD", "Ms. Pooja Dhiman", "T28 (Counselor's Room)"]
+       ]                
+      };
+
+        function talk() {
+            var user = document.getElementById("userBox").value.toLowerCase();
+            document.getElementById("userBox").value = "";
+            document.getElementById("chatLog").innerHTML += "<br>" + user + "<br>";
+
+            if (user in know) {
+                if (user === "7a" || user === "7b" || user === "7c" || user === "7d") {
+                    displayTable(know[user]);
+                } else {
+                    document.getElementById("chatLog").innerHTML += know[user] + "<br>";
+                }
+            } else {
+                document.getElementById("chatLog").innerHTML += "I don't understand<br>";
+            }
+        }
+
+        function displayTable(data) {
+            let table = "<table>";
+            data.forEach(row => {
+                table += "<tr>";
+                row.forEach(cell => {
+                    table += `<td>${cell}</td>`;
+                });
+                table += "</tr>";
+            });
+            table += "</table>";
+            document.getElementById("chatLog").innerHTML += table + "<br>";
+        }
+    </script>
+</head>
+<body>
+    <div id="chatLog">CHIT CHAT with my CHATBOT</div>
+    <input id="userBox" type="text" onkeydown="if(event.keyCode==13) {talk()}" placeholder="Type here..." autofocus>
+</body>
+</html>
